@@ -2,8 +2,11 @@ import {
   ArrowsAltOutlined,
   DeleteOutlined,
   DragOutlined,
+  FlagOutlined,
+  HomeOutlined,
   PlusCircleFilled,
   PlusCircleOutlined,
+  PlusOutlined,
   SmileOutlined,
 } from "@ant-design/icons";
 import {
@@ -85,6 +88,43 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
           Add node
         </Button>
       </Col>
+      <Col span="24">
+        <Typography.Text>Traversal</Typography.Text>
+      </Col>
+      <Col span="24">
+        <Button.Group>
+          <Button
+            style={{ width: 150 }}
+            icon={<HomeOutlined />}
+            onClick={() => {
+              if (actions.selected !== undefined)
+                actions.setStart(actions.selected);
+            }}
+          >
+            Set node as start
+          </Button>
+          <Button style={{ width: 100 }} disabled>
+            {actions.start}
+          </Button>
+        </Button.Group>
+      </Col>
+      <Col span="24">
+        <Button.Group>
+          <Button
+            style={{ width: 150 }}
+            icon={<FlagOutlined />}
+            onClick={() => {
+              if (actions.selected !== undefined)
+                actions.setEnd(actions.selected);
+            }}
+          >
+            Set node as end
+          </Button>
+          <Button style={{ width: 100 }} disabled>
+            {actions.end}
+          </Button>
+        </Button.Group>
+      </Col>
     </Row>
   );
 };
@@ -93,17 +133,36 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
   if (actions.selected !== undefined) {
     const selectedNode = actions.get(actions.selected);
     return (
-      <Descriptions layout="horizontal" column={1}>
-        <Descriptions.Item label="ID">{selectedNode?.id}</Descriptions.Item>
-        <Descriptions.Item label="X">{selectedNode?.x}</Descriptions.Item>
-        <Descriptions.Item label="Y">{selectedNode?.y}</Descriptions.Item>
-        <Descriptions.Item label="Visited">
-          <Checkbox disabled checked={selectedNode?.visited !== undefined} />
-        </Descriptions.Item>
-        <Descriptions.Item label="Active">
-          <Checkbox disabled checked={selectedNode?.visited !== undefined} />
-        </Descriptions.Item>
-      </Descriptions>
+      <>
+        <Descriptions layout="horizontal" column={1}>
+          <Descriptions.Item label="ID">
+            <Typography.Paragraph
+              editable={{
+                onChange: (newId) => {
+                  actions.renameNode(actions.selected!, newId);
+                },
+                text: actions.selected!,
+              }}
+            >
+              {selectedNode?.id}
+            </Typography.Paragraph>
+          </Descriptions.Item>
+          <Descriptions.Item label="X">{selectedNode?.x}</Descriptions.Item>
+          <Descriptions.Item label="Y">{selectedNode?.y}</Descriptions.Item>
+          <Descriptions.Item label="Visited">
+            <Checkbox disabled checked={selectedNode?.visited !== undefined} />
+          </Descriptions.Item>
+        </Descriptions>
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            actions.removeNode(actions.selected!);
+          }}
+        >
+          Delete Node
+        </Button>
+      </>
     );
   } else {
     return (

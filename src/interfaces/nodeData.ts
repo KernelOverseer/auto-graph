@@ -6,7 +6,6 @@ export interface nodeData {
     y: number,
     id: string,
     visited?: boolean,
-    active?: boolean,
 }
 
 export interface lineData {

@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { endianness } from "os";
 import React, { useState } from "react";
 import { mouseModes, nodeActions } from "../interfaces/nodeActions";
 import { lineData, nodeData, nodeProps } from "../interfaces/nodeData";
@@ -54,6 +55,8 @@ const GraphCanvas: React.FC = () => {
   const [links, setLinks] = useState<lineData[]>(testLinks);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [mode, setMode] = useState<mouseModes>("idle");
+  const [startNode, setStartNode] = useState<string | undefined>(undefined);
+  const [endNode, setEndNode] = useState<string | undefined>(undefined);
   const [_refresh, setRefresh] = useState<number>(0);
 
   function hardRefresh() {
@@ -64,7 +67,6 @@ const GraphCanvas: React.FC = () => {
     return nodes.find((value) => value.id === id);
   }
 
-  // maybe needs to refresh
   function addNode(id: string): nodeData | undefined {
     const duplicateNode = getNode(id);
     console.log("duplicate is ", duplicateNode);
@@ -83,7 +85,6 @@ const GraphCanvas: React.FC = () => {
     setSelected(undefined);
   }
 
-  // maybe needs to refresh
   function selectNode(id: string) {
     const node = getNode(id);
     console.log("SELECTING", node, id);
@@ -122,6 +123,47 @@ const GraphCanvas: React.FC = () => {
     hardRefresh();
   }
 
+  function renameNode(id: string, newId: string): boolean {
+    let node = getNode(id);
+    let duplicateNode = getNode(newId);
+    if (duplicateNode !== undefined) {
+      message.error("A node with that ID already exists");
+      return false;
+    }
+    if (node !== undefined) {
+      setNodes((old) =>
+        old.map((oldNode) =>
+          oldNode.id === id ? { ...oldNode, id: newId } : oldNode
+        )
+      );
+      setLinks((old) =>
+        old.map((oldLink) => {
+          if (oldLink.node1 === id) oldLink.node1 = newId;
+          else if (oldLink.node2 === id) oldLink.node2 = newId;
+          return oldLink;
+        })
+      );
+      setSelected(newId);
+      hardRefresh();
+      return true;
+    }
+    return false;
+  }
+
+  function removeNode(id: string): boolean {
+    let node = getNode(id);
+    if (node !== undefined) {
+      setNodes((old) => old.filter((node) => node.id !== id));
+      if (selected === id) setSelected(undefined);
+      setLinks((old) =>
+        old.filter((link) => link.node1 !== id && link.node2 !== id)
+      );
+      hardRefresh();
+      return true;
+    }
+    return false;
+  }
+
   function addLink(id1: string, id2: string) {
     // links go both ways for now
     const duplicateLink = links.find(
@@ -155,7 +197,13 @@ const GraphCanvas: React.FC = () => {
     move: moveNode,
     select: selectNode,
     selected: selected,
+    start: startNode,
+    setStart: setStartNode,
+    end: endNode,
+    setEnd: setEndNode,
     addLink: addLink,
+    renameNode: renameNode,
+    removeNode: removeNode,
     nodes: nodes,
     links: links,
     mode: mode,

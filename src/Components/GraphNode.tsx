@@ -1,4 +1,11 @@
-import { Card } from "antd";
+import {
+  FlagFilled,
+  FlagOutlined,
+  HomeFilled,
+  HomeOutlined,
+  HomeTwoTone,
+} from "@ant-design/icons";
+import { Badge, Card } from "antd";
 import React, { useState } from "react";
 import { nodeProps } from "../interfaces/nodeData";
 
@@ -35,6 +42,28 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id, actions }) => {
         actions.select(id);
       }}
     >
+      {id === actions.start && (
+        <HomeFilled
+          style={{
+            position: "absolute",
+            top: -5,
+            right: 0,
+            fontSize: 20,
+            color: "#1677ff",
+          }}
+        />
+      )}
+      {id === actions.end && (
+        <FlagFilled
+          style={{
+            position: "absolute",
+            top: -5,
+            right: 0,
+            fontSize: 20,
+            color: "#1677ff",
+          }}
+        />
+      )}
       {id}
     </Card>
   );
