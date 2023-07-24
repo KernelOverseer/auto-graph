@@ -1,5 +1,7 @@
+import { message } from "antd";
 import React, { useState } from "react";
 import { lineData, nodeData, nodeProps } from "../interfaces/nodeData";
+import ControlBar from "./ControlBar";
 import GraphLink from "./GraphLink";
 import GraphNode from "./GraphNode";
 import OptionsMenu from "./OptionsMenu";
@@ -63,6 +65,22 @@ const GraphCanvas: React.FC = () => {
     return testNodes.find((value) => value.id === id);
   }
 
+  // maybe needs to refresh
+  function addNode(id: string): nodeData | undefined {
+    const duplicateNode = getNode(id);
+    if (duplicateNode === undefined) {
+      message.error("node with same id already exists");
+      return undefined;
+    } else {
+      const node: nodeData = { x: 100, y: 100, id: id };
+      setNodes((nodes) => {
+        nodes.push(node);
+        return nodes;
+      });
+      return node;
+    }
+  }
+
   function moveNode(id: string, x: number, y: number) {
     const index = testNodes.findIndex((value) => value.id === id);
     testNodes[index].x = x;
@@ -93,7 +111,9 @@ const GraphCanvas: React.FC = () => {
       {nodes.map((node) => (
         <GraphNode {...dataToProps(node)} />
       ))}
+
       <OptionsMenu />
+      <ControlBar />
     </div>
   );
 };

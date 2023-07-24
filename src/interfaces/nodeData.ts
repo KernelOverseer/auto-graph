@@ -2,8 +2,10 @@ import React from 'react';
 
 export interface nodeData {
     x: number,
-    y: number
-    id: string;
+    y: number,
+    id: string,
+    visited?: boolean,
+    active?: boolean,
 }
 
 export interface lineData {
@@ -11,10 +13,7 @@ export interface lineData {
     node2: string;
 }
 
-export interface nodeProps {
-    x: number;
-    y: number;
-    id: string;
+export interface nodeProps extends nodeData {
     // setPos(x: number, y: number): { x: number; y: number };
   }
 
