@@ -238,6 +238,7 @@ const GraphCanvas: React.FC = () => {
             />
           );
         }
+        return <></>;
       })}
       {nodes.map((node) => (
         <GraphNode key={node.id} {...dataToProps(node)} />

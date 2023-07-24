@@ -66,7 +66,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
           </Button>
           <Button
             icon={<DeleteOutlined />}
-            type={actions.mode == "unlink" ? "primary" : "default"}
+            type={actions.mode === "unlink" ? "primary" : "default"}
             onClick={() => {
               actions.setMode("unlink");
             }}
