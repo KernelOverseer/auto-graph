@@ -9,28 +9,27 @@ import GraphNode from "./GraphNode";
 import OptionsMenu from "./OptionsMenu";
 
 const containerStyle = {
-  width: "100%",
-  height: "100%",
+  width: "100vw",
+  height: "calc(100vh - 64px)",
   overflow: "hidden",
-  backgroundColor: "white",
   backgroundImage: "url(grid.svg)",
   backgroundSize: 30,
 };
 
 let testNodes: nodeData[] = [
   {
-    x: 100,
-    y: 100,
+    x: 500,
+    y: 500,
     id: "A",
   },
   {
-    x: 100,
-    y: 200,
+    x: 600,
+    y: 500,
     id: "B",
   },
   {
-    x: 200,
-    y: 100,
+    x: 500,
+    y: 600,
     id: "C",
   },
 ];
