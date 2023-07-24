@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Affix, AutoComplete, Button, Card } from "antd";
 import React from "react";
+import { actionProps } from "../interfaces/nodeData";
 
 const barStyle = {
   position: "absolute",
@@ -15,7 +16,7 @@ const barStyle = {
   margin: "auto",
 } as React.CSSProperties;
 
-const ControlBar: React.FC = () => {
+const ControlBar: React.FC<actionProps> = ({ actions }) => {
   return (
     <div style={barStyle}>
       <Button.Group>

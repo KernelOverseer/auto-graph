@@ -1,5 +1,6 @@
 import { message } from "antd";
 import React, { useState } from "react";
+import { mouseModes, nodeActions } from "../interfaces/nodeActions";
 import { lineData, nodeData, nodeProps } from "../interfaces/nodeData";
 import ControlBar from "./ControlBar";
 import GraphLink from "./GraphLink";
@@ -48,13 +49,11 @@ let testLinks: lineData[] = [
   },
 ];
 
-function dataToProps(data: nodeData): nodeProps {
-  return data as nodeProps;
-}
-
 const GraphCanvas: React.FC = () => {
   const [nodes, setNodes] = useState<nodeData[]>(testNodes);
   const [links, setLinks] = useState<lineData[]>(testLinks);
+  const [selected, setSelected] = useState<string | undefined>(undefined);
+  const [mode, setMode] = useState<mouseModes>("idle");
   const [_refresh, setRefresh] = useState<number>(0);
 
   function hardRefresh() {
@@ -62,31 +61,109 @@ const GraphCanvas: React.FC = () => {
   }
 
   function getNode(id: string): nodeData | undefined {
-    return testNodes.find((value) => value.id === id);
+    return nodes.find((value) => value.id === id);
   }
 
   // maybe needs to refresh
   function addNode(id: string): nodeData | undefined {
     const duplicateNode = getNode(id);
-    if (duplicateNode === undefined) {
+    console.log("duplicate is ", duplicateNode);
+    if (duplicateNode !== undefined) {
       message.error("node with same id already exists");
       return undefined;
     } else {
       const node: nodeData = { x: 100, y: 100, id: id };
-      setNodes((nodes) => {
-        nodes.push(node);
-        return nodes;
-      });
+      setNodes((old) => [...old, node]);
+      hardRefresh();
       return node;
     }
   }
 
+  function deselectNodes() {
+    setSelected(undefined);
+  }
+
+  // maybe needs to refresh
+  function selectNode(id: string) {
+    const node = getNode(id);
+    console.log("SELECTING", node, id);
+    if (node !== undefined) {
+      if (selected === id) {
+        // deselect node
+        setSelected(undefined);
+        deselectNodes();
+        hardRefresh();
+        return false;
+      } else {
+        if (selected !== undefined) {
+          if (mode === "link") {
+            addLink(selected, id);
+            // adding a link if in link mode
+          } else if (mode === "unlink") {
+            removeLink(selected, id);
+            //removing link if in unlink mode
+          }
+        }
+        // select node
+        setSelected(id);
+        hardRefresh();
+        return true;
+      }
+    }
+    return false;
+  }
+
   function moveNode(id: string, x: number, y: number) {
-    const index = testNodes.findIndex((value) => value.id === id);
-    testNodes[index].x = x;
-    testNodes[index].y = y;
-    setNodes(testNodes);
+    const newNodes = nodes.map((node) =>
+      node.id === id ? { ...node, x: x, y: y } : node
+    );
+    console.log(newNodes);
+    setNodes(newNodes);
     hardRefresh();
+  }
+
+  function addLink(id1: string, id2: string) {
+    // links go both ways for now
+    const duplicateLink = links.find(
+      (link) =>
+        (link.node1 === id1 && link.node2 === id2) ||
+        (link.node1 === id2 && link.node2 === id1)
+    );
+    console.log("duplicate", duplicateLink);
+    if (duplicateLink !== undefined) {
+      return false;
+    }
+    setLinks((old) => [...old, { node1: id1, node2: id2 }]);
+    return true;
+  }
+
+  function removeLink(id1: string, id2: string) {
+    setLinks((links) =>
+      links.filter(
+        (link) =>
+          !(
+            (link.node1 === id1 && link.node2 === id2) ||
+            (link.node1 === id2 && link.node2 === id1)
+          )
+      )
+    );
+  }
+
+  const actions: nodeActions = {
+    add: addNode,
+    get: getNode,
+    move: moveNode,
+    select: selectNode,
+    selected: selected,
+    addLink: addLink,
+    nodes: nodes,
+    links: links,
+    mode: mode,
+    setMode: setMode,
+  };
+
+  function dataToProps(data: nodeData): nodeProps {
+    return { ...data, actions: actions } as nodeProps;
   }
 
   return (
@@ -105,15 +182,21 @@ const GraphCanvas: React.FC = () => {
         const node1 = getNode(link.node1);
         const node2 = getNode(link.node2);
         if (node1 && node2) {
-          return <GraphLink node1={node1} node2={node2} />;
+          return (
+            <GraphLink
+              key={`${node1.id}+${node2.id}`}
+              node1={node1}
+              node2={node2}
+            />
+          );
         }
       })}
       {nodes.map((node) => (
-        <GraphNode {...dataToProps(node)} />
+        <GraphNode key={node.id} {...dataToProps(node)} />
       ))}
 
-      <OptionsMenu />
-      <ControlBar />
+      <OptionsMenu actions={actions} />
+      <ControlBar actions={actions} />
     </div>
   );
 };

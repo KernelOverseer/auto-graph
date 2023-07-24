@@ -1,5 +1,6 @@
 import React from "react";
 import { lineProps } from "../interfaces/nodeData";
+import { useEffect } from "react";
 
 const GraphLink: React.FC<lineProps> = ({ node1, node2 }) => {
   const x1 = node1.x + 25;

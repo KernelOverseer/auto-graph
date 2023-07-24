@@ -2,23 +2,23 @@ import { Card } from "antd";
 import React, { useState } from "react";
 import { nodeProps } from "../interfaces/nodeData";
 
-const nodeStyle = {
-  borderRadius: "50%",
-  position: "absolute",
-  width: 50,
-  height: 50,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  backgroundColor: "lightgrey",
-} as React.CSSProperties;
+const GraphNode: React.FC<nodeProps> = ({ x, y, id, actions }) => {
+  const nodeStyle = {
+    borderRadius: "50%",
+    position: "absolute",
+    width: 50,
+    height: 50,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: actions.selected === id ? "lightgreen" : "lightgrey",
+  } as React.CSSProperties;
 
-var testVar;
-
-const GraphNode: React.FC<nodeProps> = ({ x, y, id }) => {
   return (
     <Card
+      className="GraphNode"
       style={{ ...nodeStyle, left: x, top: y }}
+      bordered={false}
       draggable
       onDragStart={(event) => {
         event.dataTransfer.dropEffect = "move";
@@ -29,6 +29,10 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id }) => {
           y: event.clientY - element.getBoundingClientRect().top,
         });
         event.dataTransfer.setData("offset", offset);
+      }}
+      onClick={() => {
+        console.log("selecting");
+        actions.select(id);
       }}
     >
       {id}

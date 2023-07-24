@@ -1,4 +1,5 @@
 import React from 'react';
+import { nodeActions } from './nodeActions';
 
 export interface nodeData {
     x: number,
@@ -14,10 +15,14 @@ export interface lineData {
 }
 
 export interface nodeProps extends nodeData {
-    // setPos(x: number, y: number): { x: number; y: number };
+    actions: nodeActions;
   }
 
+export interface actionProps {
+    actions: nodeActions;
+}
+
 export interface lineProps {
-    node1: nodeProps;
-    node2: nodeProps;
+    node1: nodeData;
+    node2: nodeData;
 }
