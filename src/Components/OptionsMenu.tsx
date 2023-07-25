@@ -26,7 +26,8 @@ import {
 import React from "react";
 import { mouseModes, nodeActions } from "../interfaces/nodeActions";
 import { actionProps } from "../interfaces/nodeData";
-import { reorderGraph } from "../logic/graphReshape";
+import { reorderGraph } from "../logic/algorithms";
+import AlgoMenu from "./AlgoMenu";
 
 const floatingMenuStyle = {
   position: "fixed",
@@ -34,8 +35,6 @@ const floatingMenuStyle = {
   right: 10,
   width: 300,
 } as React.CSSProperties;
-
-type algoFunction = () => Promise<void>;
 
 const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
   function getNewNodeName(): string {
@@ -130,36 +129,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
           </Button>
         </Button.Group>
       </Col>
-      <Col span="24"></Col>
-      <AlgoMenu actions={actions} />
     </Row>
-  );
-};
-
-const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
-  async function runAlgorithm(algo: algoFunction, name: string) {
-    actions.setRunning(name);
-    await algo();
-    actions.setRunning(undefined);
-  }
-
-  return (
-    <Col span="24">
-      <Button.Group>
-        <Button
-          icon={<ShareAltOutlined />}
-          onClick={() => {
-            runAlgorithm(reorderGraph, "reorder");
-          }}
-          loading={actions.running === "reorder"}
-        >
-          Reorder Graph
-        </Button>
-        <Button icon={<UndoOutlined />} onClick={actions.resetGraph}>
-          Reset Graph
-        </Button>
-      </Button.Group>
-    </Col>
   );
 };
 
@@ -168,7 +138,7 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
     const selectedNode = actions.get(actions.selected);
     return (
       <>
-        <Descriptions layout="horizontal" column={1}>
+        <Descriptions size="small" layout="horizontal" column={2}>
           <Descriptions.Item label="ID">
             <Typography.Paragraph
               editable={{
@@ -181,11 +151,11 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
               {selectedNode?.id}
             </Typography.Paragraph>
           </Descriptions.Item>
+          <Descriptions.Item label="Visited">
+            <Checkbox disabled checked={selectedNode?.visited === true} />
+          </Descriptions.Item>
           <Descriptions.Item label="X">{selectedNode?.x}</Descriptions.Item>
           <Descriptions.Item label="Y">{selectedNode?.y}</Descriptions.Item>
-          <Descriptions.Item label="Visited">
-            <Checkbox disabled checked={selectedNode?.visited !== undefined} />
-          </Descriptions.Item>
         </Descriptions>
         <Button
           danger
@@ -219,6 +189,11 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
       key: "2",
       label: "Options",
       children: <NodeOptions actions={actions} />,
+    },
+    {
+      key: "3",
+      label: "Algorithms",
+      children: <AlgoMenu actions={actions} />,
     },
   ];
 

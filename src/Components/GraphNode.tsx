@@ -33,6 +33,7 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id, visited, actions }) => {
       className="GraphNode"
       style={{ ...nodeStyle, left: x, top: y }}
       bordered={false}
+      hoverable
       draggable
       onDragStart={(event) => {
         event.dataTransfer.dropEffect = "move";

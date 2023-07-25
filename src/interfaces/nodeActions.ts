@@ -1,6 +1,7 @@
 import { lineData, nodeData } from "./nodeData";
 
 export type mouseModes = "idle" | "link" | "unlink";
+export type algoFunction = () => Promise<void>;
 
 export interface nodeActions {
   add: (id: string) => nodeData | undefined;

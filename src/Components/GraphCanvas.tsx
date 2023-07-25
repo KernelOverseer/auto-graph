@@ -52,7 +52,7 @@ const GraphCanvas: React.FC = () => {
   const [mode, setMode] = useState<mouseModes>("idle");
   const [startNode, setStartNode] = useState<string | undefined>(undefined);
   const [endNode, setEndNode] = useState<string | undefined>(undefined);
-  const [stepDelay, setStepDelay] = useState<number>(0);
+  const [stepDelay, setStepDelay] = useState<number>(100);
   const [running, setRunning] = useState<string | undefined>();
   const [_refresh, setRefresh] = useState<number>(0);
 
