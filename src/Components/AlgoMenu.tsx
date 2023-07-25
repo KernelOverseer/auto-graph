@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { actionProps } from "../interfaces/nodeData";
-import { Button, Col, Row, Select } from "antd";
-import { reorderGraph } from "../logic/algorithms";
+import { Button, Col, Row, Select, message } from "antd";
+import { breadthFirstSearch, depthFirstSearch } from "../logic/algorithms";
 import {
   RocketOutlined,
   ShareAltOutlined,
@@ -14,21 +14,23 @@ const algorithms: algoInfo[] = [
   {
     label: "Breadth First Search",
     value: "bfs",
-    function: reorderGraph,
+    function: breadthFirstSearch,
   },
   {
     label: "Depth First Search",
     value: "dfs",
-    function: async () => {},
+    function: depthFirstSearch,
   },
-  { label: "Dijkstra", value: "dijkstra", function: async () => {} },
+  //   { label: "Dijkstra", value: "dijkstra", function: async () => {} },
 ];
 
 const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
   const [selected, setSelected] = useState<algoInfo>(algorithms[0]);
 
   async function runAlgorithm(algo: algoFunction, name: string) {
+    actions.select(actions.selected!);
     actions.resetGraph();
+    await new Promise((resolve) => setTimeout(resolve, 0)); //give the component time to refresh state
     actions.setRunning(name);
     await algo();
     actions.setRunning(undefined);
@@ -48,8 +50,9 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
         />
       </Col>
       <Col span={24}>
-        <Button.Group>
+        <Button.Group style={{ width: "100%" }}>
           <Button
+            style={{ width: "50%" }}
             icon={<RocketOutlined />}
             onClick={() => {
               runAlgorithm(selected.function, selected.value);
@@ -58,8 +61,12 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
           >
             Run
           </Button>
-          <Button icon={<UndoOutlined />} onClick={actions.resetGraph}>
-            Reset Graph
+          <Button
+            style={{ width: "50%" }}
+            icon={<UndoOutlined />}
+            onClick={actions.resetGraph}
+          >
+            Reset
           </Button>
         </Button.Group>
       </Col>

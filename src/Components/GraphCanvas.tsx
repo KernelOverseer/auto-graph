@@ -7,6 +7,7 @@ import ControlBar from "./ControlBar";
 import GraphLink from "./GraphLink";
 import GraphNode from "./GraphNode";
 import OptionsMenu from "./OptionsMenu";
+import { defaultLinks, defaultNodes } from "../logic/preset";
 
 const containerStyle = {
   width: "100vw",
@@ -16,38 +17,9 @@ const containerStyle = {
   backgroundSize: 30,
 };
 
-let testNodes: nodeData[] = [
-  {
-    x: 500,
-    y: 500,
-    id: "A",
-  },
-  {
-    x: 600,
-    y: 500,
-    id: "B",
-  },
-  {
-    x: 500,
-    y: 600,
-    id: "C",
-  },
-];
-
-let testLinks: lineData[] = [
-  {
-    node1: "A",
-    node2: "B",
-  },
-  {
-    node1: "B",
-    node2: "C",
-  },
-];
-
 const GraphCanvas: React.FC = () => {
-  const [nodes, setNodes] = useState<nodeData[]>(testNodes);
-  const [links, setLinks] = useState<lineData[]>(testLinks);
+  const [nodes, setNodes] = useState<nodeData[]>(defaultNodes);
+  const [links, setLinks] = useState<lineData[]>(defaultLinks);
   const [selected, setSelected] = useState<string | undefined>(undefined);
   const [mode, setMode] = useState<mouseModes>("idle");
   const [startNode, setStartNode] = useState<string | undefined>(undefined);
@@ -177,6 +149,9 @@ const GraphCanvas: React.FC = () => {
       setLinks((old) =>
         old.filter((link) => link.node1 !== id && link.node2 !== id)
       );
+      //if the node is a start or end node, handle it
+      if (actions.start === id) setStartNode(undefined);
+      if (actions.end === id) setEndNode(undefined);
       hardRefresh();
       return true;
     }
@@ -260,7 +235,7 @@ const GraphCanvas: React.FC = () => {
     id: string
   ): Promise<nodeData | undefined> => {
     let node = getNode(id);
-    if (node !== undefined) {
+    if (node !== undefined && node.visited !== true) {
       visitNode(id);
       // here introduce either a delay, or blockage to progress steps
       await handleStepping();
@@ -269,6 +244,9 @@ const GraphCanvas: React.FC = () => {
   };
   (window as any).getStart = () => actions.start;
   (window as any).getEnd = () => actions.end;
+  (window as any).export = () => {
+    console.log(nodes, links);
+  };
 
   const actions: nodeActions = {
     add: addNode,

@@ -26,7 +26,7 @@ import {
 import React from "react";
 import { mouseModes, nodeActions } from "../interfaces/nodeActions";
 import { actionProps } from "../interfaces/nodeData";
-import { reorderGraph } from "../logic/algorithms";
+import { breadthFirstSearch } from "../logic/algorithms";
 import AlgoMenu from "./AlgoMenu";
 
 const floatingMenuStyle = {
@@ -199,7 +199,7 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
 
   return (
     <div style={floatingMenuStyle}>
-      <Collapse items={menuItems} defaultActiveKey={["1", "2"]} />
+      <Collapse items={menuItems} defaultActiveKey={["1", "2", "3"]} />
     </div>
   );
 };

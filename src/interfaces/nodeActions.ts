@@ -23,7 +23,7 @@ export interface nodeActions {
   links: lineData[];
   stepDelay: number;
   setStepDelay: (delay: number) => void;
-  running: string;
+  running: string | undefined;
   setRunning: (running: string | undefined) => void;
 }
 
