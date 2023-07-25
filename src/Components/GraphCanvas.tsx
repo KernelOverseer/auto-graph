@@ -43,10 +43,6 @@ let testLinks: lineData[] = [
     node1: "B",
     node2: "C",
   },
-  {
-    node1: "C",
-    node2: "D",
-  },
 ];
 
 const GraphCanvas: React.FC = () => {
@@ -56,6 +52,8 @@ const GraphCanvas: React.FC = () => {
   const [mode, setMode] = useState<mouseModes>("idle");
   const [startNode, setStartNode] = useState<string | undefined>(undefined);
   const [endNode, setEndNode] = useState<string | undefined>(undefined);
+  const [stepDelay, setStepDelay] = useState<number>(0);
+  const [running, setRunning] = useState<string | undefined>();
   const [_refresh, setRefresh] = useState<number>(0);
 
   function hardRefresh() {
@@ -64,6 +62,19 @@ const GraphCanvas: React.FC = () => {
 
   function getNode(id: string): nodeData | undefined {
     return nodes.find((value) => value.id === id);
+  }
+
+  function getChildren(id: string): string[] | undefined {
+    const parent = getNode(id);
+    if (parent === undefined) return undefined;
+    else {
+      let children: string[] = [];
+      links.forEach((link) => {
+        if (link.node1 === parent.id) children.push(link.node2);
+        else if (link.node2 === parent.id) children.push(link.node1);
+      });
+      return [...new Set(children)];
+    }
   }
 
   function addNode(id: string): nodeData | undefined {
@@ -119,6 +130,15 @@ const GraphCanvas: React.FC = () => {
     );
     console.log(newNodes);
     setNodes(newNodes);
+    hardRefresh();
+  }
+
+  function visitNode(id: string) {
+    setNodes((old) =>
+      old.map((oldNode) =>
+        oldNode.id === id ? { ...oldNode, visited: true } : oldNode
+      )
+    );
     hardRefresh();
   }
 
@@ -190,6 +210,66 @@ const GraphCanvas: React.FC = () => {
     );
   }
 
+  function flagLink(id1: string, id2: string, flag: boolean) {
+    setLinks((links) =>
+      links.map((link) => {
+        if (
+          (link.node1 === id1 && link.node2 === id2) ||
+          (link.node1 === id2 && link.node2 === id1)
+        ) {
+          link.flag = flag;
+        }
+        return link;
+      })
+    );
+    hardRefresh();
+  }
+
+  function resetGraph() {
+    setNodes((nodes) => nodes.map((node) => ({ ...node, visited: false })));
+    setLinks((links) => links.map((link) => ({ ...link, flag: false })));
+    hardRefresh();
+  }
+
+  // stepper function
+  async function handleStepping() {
+    if (stepDelay === 0) {
+      await new Promise<void>((resolve) => {
+        console.log("creating promise");
+        const nextStep = () => {
+          console.log("NEXT");
+          document
+            .getElementById("control-next-step")
+            ?.removeEventListener("click", nextStep);
+          resolve();
+        }; // Resolve the promise when the button is pressed
+        document
+          .getElementById("control-next-step")
+          ?.addEventListener("click", nextStep);
+      });
+    } else await new Promise((resolve) => setTimeout(resolve, stepDelay));
+  }
+
+  //exposing functions to window
+  (window as any).getChildren = (id: string): string[] => {
+    let children = getChildren(id);
+    if (children === undefined) return [];
+    return children;
+  };
+  (window as any).getNode = async (
+    id: string
+  ): Promise<nodeData | undefined> => {
+    let node = getNode(id);
+    if (node !== undefined) {
+      visitNode(id);
+      // here introduce either a delay, or blockage to progress steps
+      await handleStepping();
+    }
+    return node;
+  };
+  (window as any).getStart = () => actions.start;
+  (window as any).getEnd = () => actions.end;
+
   const actions: nodeActions = {
     add: addNode,
     get: getNode,
@@ -203,10 +283,15 @@ const GraphCanvas: React.FC = () => {
     addLink: addLink,
     renameNode: renameNode,
     removeNode: removeNode,
+    resetGraph: resetGraph,
     nodes: nodes,
     links: links,
     mode: mode,
     setMode: setMode,
+    stepDelay: stepDelay,
+    setStepDelay: setStepDelay,
+    running: running,
+    setRunning: setRunning,
   };
 
   function dataToProps(data: nodeData): nodeProps {
@@ -217,6 +302,8 @@ const GraphCanvas: React.FC = () => {
     <div
       style={containerStyle}
       onDrop={(event) => {
+        //check if it's dropping random things and not nodes.
+        if (event.dataTransfer.getData("type") !== "node") return;
         const movedId: string = event.dataTransfer.getData("id");
         const offset = JSON.parse(event.dataTransfer.getData("offset"));
         moveNode(movedId, event.clientX - offset.x, event.clientY - offset.y);
@@ -234,6 +321,7 @@ const GraphCanvas: React.FC = () => {
               key={`${node1.id}+${node2.id}`}
               node1={node1}
               node2={node2}
+              flag={link.flag}
             />
           );
         }

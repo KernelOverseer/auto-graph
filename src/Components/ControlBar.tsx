@@ -17,12 +17,35 @@ const barStyle = {
 } as React.CSSProperties;
 
 const ControlBar: React.FC<actionProps> = ({ actions }) => {
+  const disabled = actions.running === undefined;
   return (
     <div style={barStyle}>
       <Button.Group>
-        <Button icon={<StepBackwardFilled />}>Prev</Button>
-        <Button icon={<CaretRightFilled />}>Start</Button>
-        <Button icon={<StepForwardFilled />}>Next</Button>
+        {actions.stepDelay === 0 ? (
+          <Button
+            key="start-pause"
+            icon={<CaretRightFilled />}
+            disabled={disabled}
+          >
+            Start
+          </Button>
+        ) : (
+          <Button
+            key="start-pause"
+            icon={<PauseOutlined />}
+            disabled={disabled}
+          >
+            Pause
+          </Button>
+        )}
+        <Button
+          key="step"
+          id="control-next-step"
+          icon={<StepForwardFilled />}
+          disabled={disabled}
+        >
+          Step
+        </Button>
       </Button.Group>
     </div>
   );

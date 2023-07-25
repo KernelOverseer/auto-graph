@@ -7,7 +7,9 @@ import {
   PlusCircleFilled,
   PlusCircleOutlined,
   PlusOutlined,
+  ShareAltOutlined,
   SmileOutlined,
+  UndoOutlined,
 } from "@ant-design/icons";
 import {
   Affix,
@@ -24,6 +26,7 @@ import {
 import React from "react";
 import { mouseModes, nodeActions } from "../interfaces/nodeActions";
 import { actionProps } from "../interfaces/nodeData";
+import { reorderGraph } from "../logic/graphReshape";
 
 const floatingMenuStyle = {
   position: "fixed",
@@ -31,6 +34,8 @@ const floatingMenuStyle = {
   right: 10,
   width: 300,
 } as React.CSSProperties;
+
+type algoFunction = () => Promise<void>;
 
 const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
   function getNewNodeName(): string {
@@ -125,7 +130,36 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
           </Button>
         </Button.Group>
       </Col>
+      <Col span="24"></Col>
+      <AlgoMenu actions={actions} />
     </Row>
+  );
+};
+
+const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
+  async function runAlgorithm(algo: algoFunction, name: string) {
+    actions.setRunning(name);
+    await algo();
+    actions.setRunning(undefined);
+  }
+
+  return (
+    <Col span="24">
+      <Button.Group>
+        <Button
+          icon={<ShareAltOutlined />}
+          onClick={() => {
+            runAlgorithm(reorderGraph, "reorder");
+          }}
+          loading={actions.running === "reorder"}
+        >
+          Reorder Graph
+        </Button>
+        <Button icon={<UndoOutlined />} onClick={actions.resetGraph}>
+          Reset Graph
+        </Button>
+      </Button.Group>
+    </Col>
   );
 };
 

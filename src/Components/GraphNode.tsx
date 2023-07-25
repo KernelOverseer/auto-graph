@@ -9,7 +9,13 @@ import { Badge, Card } from "antd";
 import React, { useState } from "react";
 import { nodeProps } from "../interfaces/nodeData";
 
-const GraphNode: React.FC<nodeProps> = ({ x, y, id, actions }) => {
+function getNodeColor(selected: boolean, visited: boolean | undefined): string {
+  if (selected === true) return "lightgreen";
+  if (visited === true) return "lightblue";
+  return "lightgrey";
+}
+
+const GraphNode: React.FC<nodeProps> = ({ x, y, id, visited, actions }) => {
   const nodeStyle = {
     borderRadius: "50%",
     position: "absolute",
@@ -18,7 +24,8 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id, actions }) => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: actions.selected === id ? "lightgreen" : "lightgrey",
+    border: visited ? "1px solid lightgrey" : "none",
+    backgroundColor: getNodeColor(actions.selected === id, visited),
   } as React.CSSProperties;
 
   return (
@@ -29,6 +36,7 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id, actions }) => {
       draggable
       onDragStart={(event) => {
         event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.setData("type", "node");
         event.dataTransfer.setData("id", id);
         const element = event.target as HTMLElement;
         const offset: string = JSON.stringify({

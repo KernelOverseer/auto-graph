@@ -6,6 +6,10 @@
       "dom.iterable",
       "esnext"
     ],
+    "compilerOptions": {
+      // Other compiler options...
+      "downlevelIteration": true
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

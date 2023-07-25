@@ -2,7 +2,7 @@ import React from "react";
 import { lineProps } from "../interfaces/nodeData";
 import { useEffect } from "react";
 
-const GraphLink: React.FC<lineProps> = ({ node1, node2 }) => {
+const GraphLink: React.FC<lineProps> = ({ node1, node2, flag }) => {
   const x1 = node1.x + 25;
   const x2 = node2.x + 25;
   const y1 = node1.y + 25;
@@ -17,7 +17,7 @@ const GraphLink: React.FC<lineProps> = ({ node1, node2 }) => {
     left: x1,
     width: length,
     height: 2,
-    background: "black",
+    background: flag === true ? "darkgray" : "black",
     transform: `rotate(${angle}deg)`,
     transformOrigin: "top left",
   } as React.CSSProperties;

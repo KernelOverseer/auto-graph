@@ -34,13 +34,13 @@ const MainLayout: React.FC<Props> = ({ children }) => {
       <Header>
         <div className="main-logo">
           <img
-            style={{ position: "relative", top: 10 }}
-            height={50}
+            style={{ position: "relative", top: 15 }}
+            height={40}
             src="AutoGraph.svg"
           />
         </div>
       </Header>
-      {/*
+      {/* 
       <Layout>
         <Sider
           collapsible
@@ -56,8 +56,8 @@ const MainLayout: React.FC<Props> = ({ children }) => {
             items={menuItems}
           />
         </Sider>
-      </Layout>
-        */}
+      </Layout> */}
+
       <Content>{children}</Content>
     </Layout>
   );
