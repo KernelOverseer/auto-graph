@@ -1,46 +1,85 @@
-# Getting Started with Create React App
+<p align="center">
+<img src="https://i.ibb.co/F8J7zGz/Auto-Graph.png">
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+This is a graph visualization website built using React, TypeScript, and Ant Design. The project demonstrates my skills in handling drag and drop functionality, state management, creating a clean and user-friendly interface with Ant Design components, and utilizing TypeScript types and interfaces to enhance code quality and maintainability.
 
-In the project directory, you can run:
+The website allows users to interactively visualize and manipulate graphs using drag and drop interactions, providing an intuitive and engaging experience for graph exploration and analysis.
 
-### `npm start`
+<p align="center">
+<img src="https://i.ibb.co/GMjnPv7/Screenshot-2023-07-25-192955.png">
+</p>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Key Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Interactive Graph Visualization: Users can create, modify, and explore graphs through intuitive drag and drop interactions, making it easy to understand complex relationships between nodes.
 
-### `npm test`
+- State Management: The application efficiently manages state updates to ensure seamless graph manipulation without losing data integrity.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- User-Friendly Interface: The project features a clean and intuitive user interface, designed using Ant Design components, enhancing the overall user experience.
 
-### `npm run build`
+- TypeScript Types and Interfaces: TypeScript has been used extensively to provide type safety, reducing potential bugs and improving code readability.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How to Use
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Installation**: Clone the repository and navigate to the project directory. Install the required dependencies using the following command:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```
+   npm install
+   ```
 
-### `npm run eject`
+2. **Development**: To run the project locally in development mode, use the following command:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+   ```
+   npm start
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   This will start the development server, and you can access the website at `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+3. **Build**: If you want to build the production-ready version of the project, use the following command:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+   ```
+   npm run build
+   ```
 
-## Learn More
+   The optimized and minified files will be available in the `build` folder.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technologies Used
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- React: JavaScript library for building user interfaces.
+- TypeScript: Adds static typing to JavaScript to enhance code quality and developer productivity.
+- Ant Design: A design system and React UI library for creating modern and accessible interfaces.
+
+## Learnings and Challenges
+
+Throughout the development of this project, I have gained valuable experience in the following areas:
+
+- **Handling Drag and Drop**: I successfully implemented drag and drop functionality for graph nodes, which allowed users to interactively modify the graph layout.
+
+- **State Management and Updates**: I employed efficient state management techniques to ensure smooth updates to the graph while maintaining data integrity.
+
+- **Creating a Clean Interface with Ant Design**: Utilizing Ant Design components, I designed a user-friendly interface that adheres to modern design principles.
+
+- **Designing a User-Friendly Interface**: I focused on creating an intuitive and user-friendly interface to enhance the overall user experience.
+
+- **TypeScript Types and Interfaces**: Extensively using TypeScript, I defined types and interfaces to ensure type safety and improve code maintainability.
+
+- (Add any other notable learnings or challenges you encountered during the project.)
+
+## Future Enhancements
+
+Although the current version of the project showcases the skills mentioned above, there are several areas where it can be further improved:
+
+- **Responsive Design**: Enhancing the responsiveness of the website to ensure a seamless experience across various devices and screen sizes.
+
+- **Code Sandbox**: Allowing the users to explore more by visualizing what their code does, and explore more.
+
+## Contribution
+
+I welcome contributions to this project. If you find any issues or have ideas for improvement, feel free to open an issue or submit a pull request. Let's make this project even better together!
+
+## License
+
+This project is licensed under the [MIT License](link/to/license/file).
