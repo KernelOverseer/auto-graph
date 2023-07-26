@@ -4,29 +4,25 @@ import {
   DragOutlined,
   FlagOutlined,
   HomeOutlined,
-  PlusCircleFilled,
   PlusCircleOutlined,
-  PlusOutlined,
-  ShareAltOutlined,
+  QuestionCircleFilled,
+  QuestionCircleOutlined,
   SmileOutlined,
-  UndoOutlined,
 } from "@ant-design/icons";
 import {
-  Affix,
   Button,
-  Card,
   Checkbox,
   Col,
   Collapse,
   CollapseProps,
   Descriptions,
   Row,
+  Tour,
+  TourProps,
   Typography,
 } from "antd";
-import React from "react";
-import { mouseModes, nodeActions } from "../interfaces/nodeActions";
+import React, { useState } from "react";
 import { actionProps } from "../interfaces/nodeData";
-import { breadthFirstSearch } from "../logic/algorithms";
 import AlgoMenu from "./AlgoMenu";
 
 const floatingMenuStyle = {
@@ -48,9 +44,10 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
       <Col span="24">
         <Typography.Text>Mouse mode</Typography.Text>
       </Col>
-      <Col span="24" title="Mouse mode">
+      <Col span="24" title="Mouse mode" id="guide-mouse-mode-select">
         <Button.Group>
           <Button
+            id="guide-mouse-mode-move"
             icon={<DragOutlined />}
             type={actions.mode === "idle" ? "primary" : "default"}
             onClick={() => {
@@ -60,6 +57,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
             Move
           </Button>
           <Button
+            id="guide-mouse-mode-link"
             icon={<ArrowsAltOutlined />}
             type={actions.mode === "link" ? "primary" : "default"}
             onClick={() => {
@@ -69,6 +67,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
             Link
           </Button>
           <Button
+            id="guide-mouse-mode-unlink"
             icon={<DeleteOutlined />}
             type={actions.mode === "unlink" ? "primary" : "default"}
             onClick={() => {
@@ -84,6 +83,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
       </Col>
       <Col span="24">
         <Button
+          id="guide-node-create"
           icon={<PlusCircleOutlined />}
           onClick={() => {
             actions.add(getNewNodeName());
@@ -95,7 +95,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
       <Col span="24">
         <Typography.Text>Traversal</Typography.Text>
       </Col>
-      <Col span="24">
+      <Col span="24" id="guide-node-start">
         <Button.Group>
           <Button
             style={{ width: 150 }}
@@ -112,7 +112,7 @@ const ActionsMenu: React.FC<actionProps> = ({ actions }) => {
           </Button>
         </Button.Group>
       </Col>
-      <Col span="24">
+      <Col span="24" id="guide-node-end">
         <Button.Group>
           <Button
             style={{ width: 150 }}
@@ -137,7 +137,7 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
   if (actions.selected !== undefined) {
     const selectedNode = actions.get(actions.selected);
     return (
-      <>
+      <div id="guide-node-details">
         <Descriptions size="small" layout="horizontal" column={2}>
           <Descriptions.Item label="ID">
             <Typography.Paragraph
@@ -166,11 +166,11 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
         >
           Delete Node
         </Button>
-      </>
+      </div>
     );
   } else {
     return (
-      <div style={{ textAlign: "center", padding: 20 }}>
+      <div style={{ textAlign: "center", padding: 20 }} id="guide-node-details">
         <SmileOutlined style={{ fontSize: 20 }} />
         <p>Select a node</p>
       </div>
@@ -179,6 +179,7 @@ const NodeOptions: React.FC<actionProps> = ({ actions }) => {
 };
 
 const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
+  const [active, setActive] = useState<string | string[]>(["1", "2", "3"]);
   const menuItems: CollapseProps["items"] = [
     {
       key: "1",
@@ -199,8 +200,128 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
 
   return (
     <div style={floatingMenuStyle}>
-      <Collapse items={menuItems} defaultActiveKey={["1", "2", "3"]} />
+      <Collapse
+        items={menuItems}
+        activeKey={active}
+        onChange={(keys) => {
+          setActive(keys);
+        }}
+      />
+      <OptionsGuide
+        openCollapse={() => {
+          setActive(["1", "2", "3"]);
+        }}
+      />
     </div>
+  );
+};
+
+//make it automatically open the collapse when clicking the guide button
+const OptionsGuide: React.FC<{ openCollapse: () => void }> = ({
+  openCollapse,
+}) => {
+  const [open, setOpen] = useState<boolean>(false);
+
+  const steps = [
+    {
+      title: "Change Mouse Mode",
+      description:
+        "Here, you can select your preferred mouse mode for interacting with the application.",
+      target: () => document.getElementById("guide-mouse-mode-select")!,
+    },
+    {
+      title: "Move Nodes",
+      description:
+        "In this mode, you can easily drag and reposition nodes to your desired locations.",
+      target: () => document.getElementById("guide-mouse-mode-move")!,
+    },
+    {
+      title: "Link Nodes",
+      description:
+        "Select a node and then click on another node to create a link between them.",
+      target: () => document.getElementById("guide-mouse-mode-link")!,
+    },
+    {
+      title: "Unlink Nodes",
+      description:
+        "To remove a link between nodes, select a node, and then click on the second node in the link.",
+      target: () => document.getElementById("guide-mouse-mode-unlink")!,
+    },
+    {
+      title: "Create a New Node",
+      description:
+        "Click this button to effortlessly add a new node to the graph.",
+      target: () => document.getElementById("guide-node-create")!,
+    },
+    {
+      title: "Set Node as Starting Point",
+      description:
+        "Choose a node and use this button to set it as the starting point for pathfinding algorithms.",
+      target: () => document.getElementById("guide-node-start")!,
+    },
+    {
+      title: "Set Node as End Point",
+      description:
+        "Select a node and use this button to set it as the goal point for pathfinding algorithms.",
+      target: () => document.getElementById("guide-node-end")!,
+    },
+    {
+      title: "Node Details",
+      description:
+        "When you select a node, you can view its details, and edit the node's name as well as delete the node",
+      target: () => document.getElementById("guide-node-details")!,
+    },
+    {
+      title: "Select an Algorithm to Run",
+      description:
+        "Explore multiple algorithms and choose one to run on the graph.",
+      target: () => document.getElementById("guide-algo-select")!,
+    },
+    {
+      title: "Run the Algorithm",
+      description:
+        "Press this button to execute the selected algorithm and enjoy the visual representation.",
+      target: () => document.getElementById("guide-algo-run")!,
+    },
+    {
+      title: "Reset Nodes Status",
+      description:
+        "Reset all node and link flags by clicking this button, marking every node as not visited.",
+      target: () => document.getElementById("guide-algo-reset")!,
+    },
+    {
+      title: "Control algorithm execution",
+      description:
+        "The control bar allows you to set the animation speed, or you can pause the execution and advance step by step",
+      target: () => document.getElementById("guide-control-bar")!,
+    },
+    {
+      title: "Congratulations 🎉",
+      description:
+        "You are now ready to enjoy this tool fully, don't forget to support me by leaving a star on my github repo!",
+    },
+  ];
+
+  return (
+    <>
+      <Button
+        icon={<QuestionCircleOutlined />}
+        type="link"
+        onClick={() => {
+          openCollapse();
+          setOpen(true);
+        }}
+      >
+        Tutorial
+      </Button>
+      <Tour
+        open={open}
+        steps={steps}
+        onClose={() => {
+          setOpen(false);
+        }}
+      />
+    </>
   );
 };
 

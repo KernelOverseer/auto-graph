@@ -40,6 +40,7 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
     <Row gutter={[16, 16]}>
       <Col span={24}>
         <Select
+        id="guide-algo-select"
           style={{ width: "100%" }}
           onSelect={(_, value) => {
             setSelected(value);
@@ -52,6 +53,7 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
       <Col span={24}>
         <Button.Group style={{ width: "100%" }}>
           <Button
+          id="guide-algo-run"
             style={{ width: "50%" }}
             icon={<RocketOutlined />}
             onClick={() => {
@@ -62,6 +64,7 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
             Run
           </Button>
           <Button
+          id="guide-algo-reset"
             style={{ width: "50%" }}
             icon={<UndoOutlined />}
             onClick={actions.resetGraph}

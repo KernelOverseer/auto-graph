@@ -38,7 +38,7 @@ const ControlBar: React.FC<actionProps> = ({ actions }) => {
   const disabled = actions.running === undefined;
   const [oldStepDelay, saveStepDelay] = useState<number>(100);
   return (
-    <Card bordered={false} hoverable style={barStyle} bodyStyle={barBodyStyle}>
+    <Card id="guide-control-bar" bordered={false} hoverable style={barStyle} bodyStyle={barBodyStyle}>
       <Row align="middle">
         <Col span={10}>
           <Button.Group>

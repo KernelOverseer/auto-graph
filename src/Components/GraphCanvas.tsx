@@ -63,7 +63,8 @@ const GraphCanvas: React.FC = () => {
       message.error("node with same id already exists");
       return undefined;
     } else {
-      const node: nodeData = { x: 100, y: 100, id: id };
+      const coords = getCoordsFromDisplay(100, 100, transform);
+      const node: nodeData = { x: coords.x, y: coords.y, id: id };
       setNodes((old) => [...old, node]);
       hardRefresh();
       return node;
