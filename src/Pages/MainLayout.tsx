@@ -8,33 +8,15 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const menuItems: MenuProps["items"] = [
-  {
-    label: "Main Page",
-    key: "item1",
-    icon: <DesktopOutlined />,
-  },
-  {
-    label: "Desktop",
-    key: "item2",
-    icon: <DesktopOutlined />,
-  },
-  {
-    label: "Another",
-    key: "item3",
-    icon: <DesktopOutlined />,
-  },
-];
-
 const MainLayout: React.FC<Props> = ({ children }) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Header>
+      <Header style={{ zIndex: 10, height: 55 }}>
         <div className="main-logo">
           <img
-            style={{ position: "relative", top: 15 }}
+            style={{ position: "relative", top: 10 }}
             height={40}
             src="AutoGraph.svg"
           />

@@ -1,4 +1,5 @@
 import { lineData, nodeData } from "./nodeData";
+import { transforms } from "./transforms";
 
 export type mouseModes = "idle" | "link" | "unlink";
 export type algoFunction = () => Promise<void>;
@@ -25,6 +26,8 @@ export interface nodeActions {
   setStepDelay: (delay: number) => void;
   running: string | undefined;
   setRunning: (running: string | undefined) => void;
+  transform: transforms;
+  setTransform: (transform: transforms) => void;
 }
 
 export interface nodeOperations {

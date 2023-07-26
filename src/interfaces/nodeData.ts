@@ -26,4 +26,5 @@ export interface lineProps {
   node1: nodeData;
   node2: nodeData;
   flag?: boolean;
+  actions: nodeActions;
 }

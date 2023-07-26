@@ -3,9 +3,16 @@ import { nodeOperations } from "../interfaces/nodeActions";
 import { nodeData } from "../interfaces/nodeData";
 import { message } from "antd";
 
-function requireStartEnd(start: boolean, end: boolean) {
-  if (start) message.warning("Please select a starting node");
-  if (end) message.warning("Please select an end node");
+function requireStartEnd(start: boolean, end: boolean): boolean {
+  if (start) {
+    message.warning("Please select a starting node");
+    return true;
+  }
+  if (end) {
+    message.warning("Please select an end node");
+    return true;
+  }
+  return false;
 }
 
 export async function depthFirstSearch(): Promise<void> {
@@ -13,8 +20,7 @@ export async function depthFirstSearch(): Promise<void> {
   const start = graph.getStart();
   const end = graph.getEnd();
 
-  if (start === undefined || end === undefined) {
-    requireStartEnd(true, true);
+  if (requireStartEnd(start === undefined, end === undefined)) {
     return;
   }
 
@@ -38,8 +44,7 @@ export async function breadthFirstSearch(): Promise<void> {
   const start = graph.getStart();
   const end = graph.getEnd();
 
-  if (start === undefined || end === undefined) {
-    requireStartEnd(true, true);
+  if (requireStartEnd(start === undefined, end === undefined)) {
     return;
   }
 

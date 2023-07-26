@@ -8,6 +8,7 @@ import {
 import { Badge, Card } from "antd";
 import React, { useState } from "react";
 import { nodeProps } from "../interfaces/nodeData";
+import { getDisplayCoords } from "../logic/transforms";
 
 function getNodeColor(selected: boolean, visited: boolean | undefined): string {
   if (selected === true) return "lightgreen";
@@ -28,10 +29,12 @@ const GraphNode: React.FC<nodeProps> = ({ x, y, id, visited, actions }) => {
     backgroundColor: getNodeColor(actions.selected === id, visited),
   } as React.CSSProperties;
 
+  const coords = getDisplayCoords(x, y, actions.transform);
+
   return (
     <Card
       className="GraphNode"
-      style={{ ...nodeStyle, left: x, top: y }}
+      style={{ ...nodeStyle, left: coords.x, top: coords.y }}
       bordered={false}
       hoverable
       draggable

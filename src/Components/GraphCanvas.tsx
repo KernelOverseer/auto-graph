@@ -8,6 +8,7 @@ import GraphLink from "./GraphLink";
 import GraphNode from "./GraphNode";
 import OptionsMenu from "./OptionsMenu";
 import { defaultLinks, defaultNodes } from "../logic/preset";
+import { transforms } from "../interfaces/transforms";
 
 const containerStyle = {
   width: "100vw",
@@ -26,6 +27,12 @@ const GraphCanvas: React.FC = () => {
   const [endNode, setEndNode] = useState<string | undefined>(undefined);
   const [stepDelay, setStepDelay] = useState<number>(100);
   const [running, setRunning] = useState<string | undefined>();
+  const [transform, setTransform] = useState<transforms>({
+    offX: 0,
+    offY: 0,
+    zoom: 1.0,
+    dragOn: false,
+  });
   const [_refresh, setRefresh] = useState<number>(0);
 
   function hardRefresh() {
@@ -270,10 +277,37 @@ const GraphCanvas: React.FC = () => {
     setStepDelay: setStepDelay,
     running: running,
     setRunning: setRunning,
+    transform: transform,
+    setTransform: setTransform,
   };
 
   function dataToProps(data: nodeData): nodeProps {
-    return { ...data, actions: actions } as nodeProps;
+    return {
+      ...data,
+      actions: actions,
+    } as nodeProps;
+  }
+
+  function handleMouseDown(event: React.MouseEvent) {
+    if (event.button === 1) {
+      setTransform((transform) => ({ ...transform, dragOn: true }));
+    }
+  }
+
+  function handleMouseUp(event: React.MouseEvent) {
+    if (event.button === 1) {
+      setTransform((transform) => ({ ...transform, dragOn: false }));
+    }
+  }
+
+  function handleMouseMove(event: React.MouseEvent) {
+    if (transform.dragOn) {
+      setTransform((transform) => ({
+        ...transform,
+        offX: transform.offX + event.movementX,
+        offY: transform.offY + event.movementY,
+      }));
+    }
   }
 
   return (
@@ -284,11 +318,18 @@ const GraphCanvas: React.FC = () => {
         if (event.dataTransfer.getData("type") !== "node") return;
         const movedId: string = event.dataTransfer.getData("id");
         const offset = JSON.parse(event.dataTransfer.getData("offset"));
-        moveNode(movedId, event.clientX - offset.x, event.clientY - offset.y);
+        moveNode(
+          movedId,
+          event.clientX - offset.x - transform.offX,
+          event.clientY - offset.y - transform.offY
+        );
       }}
       onDragOver={(event) => {
         event.preventDefault();
       }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
     >
       {links.map((link) => {
         const node1 = getNode(link.node1);
@@ -300,6 +341,7 @@ const GraphCanvas: React.FC = () => {
               node1={node1}
               node2={node2}
               flag={link.flag}
+              actions={actions}
             />
           );
         }
