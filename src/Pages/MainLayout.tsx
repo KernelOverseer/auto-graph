@@ -1,7 +1,18 @@
 import "antd";
 import React, { useState } from "react";
-import PieChartOutlined, { DesktopOutlined } from "@ant-design/icons";
-import { Card, Layout, Menu, MenuProps } from "antd";
+import PieChartOutlined, {
+  DesktopOutlined,
+  GithubOutlined,
+} from "@ant-design/icons";
+import {
+  Badge,
+  Card,
+  FloatButton,
+  Layout,
+  Menu,
+  MenuProps,
+  Tooltip,
+} from "antd";
 const { Header, Sider, Content } = Layout;
 
 interface Props {
@@ -13,14 +24,16 @@ const MainLayout: React.FC<Props> = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Header style={{ zIndex: 10, height: 55 }}>
-        <div className="main-logo">
-          <img
-            style={{ position: "relative", top: 10 }}
-            height={40}
-            src="AutoGraph.svg"
-          />
-        </div>
+      <Header style={{ zIndex: 10, height: 50 }}>
+        <center>
+          <div className="main-logo">
+            <img
+              style={{ position: "relative", top: 5 }}
+              height={40}
+              src="AutoGraph.svg"
+            />
+          </div>
+        </center>
       </Header>
       {/* 
       <Layout>

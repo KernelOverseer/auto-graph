@@ -3,6 +3,7 @@ import {
   DeleteOutlined,
   DragOutlined,
   FlagOutlined,
+  GithubOutlined,
   HomeOutlined,
   PlusCircleOutlined,
   QuestionCircleFilled,
@@ -212,6 +213,14 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
           setActive(["1", "2", "3"]);
         }}
       />
+      <Button
+        icon={<GithubOutlined />}
+        type="link"
+        href="https://github.com/kerneloverseer/auto-graph"
+        target="_blank"
+      >
+        Repo
+      </Button>
     </div>
   );
 };
