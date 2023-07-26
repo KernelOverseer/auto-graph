@@ -9,6 +9,7 @@ import GraphNode from "./GraphNode";
 import OptionsMenu from "./OptionsMenu";
 import { defaultLinks, defaultNodes } from "../logic/preset";
 import { transforms } from "../interfaces/transforms";
+import { getCoordsFromDisplay } from "../logic/transforms";
 
 const containerStyle = {
   width: "100vw",
@@ -58,7 +59,6 @@ const GraphCanvas: React.FC = () => {
 
   function addNode(id: string): nodeData | undefined {
     const duplicateNode = getNode(id);
-    console.log("duplicate is ", duplicateNode);
     if (duplicateNode !== undefined) {
       message.error("node with same id already exists");
       return undefined;
@@ -76,7 +76,6 @@ const GraphCanvas: React.FC = () => {
 
   function selectNode(id: string) {
     const node = getNode(id);
-    console.log("SELECTING", node, id);
     if (node !== undefined) {
       if (selected === id) {
         // deselect node
@@ -107,7 +106,6 @@ const GraphCanvas: React.FC = () => {
     const newNodes = nodes.map((node) =>
       node.id === id ? { ...node, x: x, y: y } : node
     );
-    console.log(newNodes);
     setNodes(newNodes);
     hardRefresh();
   }
@@ -172,7 +170,6 @@ const GraphCanvas: React.FC = () => {
         (link.node1 === id1 && link.node2 === id2) ||
         (link.node1 === id2 && link.node2 === id1)
     );
-    console.log("duplicate", duplicateLink);
     if (duplicateLink !== undefined) {
       return false;
     }
@@ -217,9 +214,7 @@ const GraphCanvas: React.FC = () => {
   async function handleStepping() {
     if (stepDelay === 0) {
       await new Promise<void>((resolve) => {
-        console.log("creating promise");
         const nextStep = () => {
-          console.log("NEXT");
           document
             .getElementById("control-next-step")
             ?.removeEventListener("click", nextStep);
@@ -310,6 +305,19 @@ const GraphCanvas: React.FC = () => {
     }
   }
 
+  function handleMouseWheel(event: React.WheelEvent) {
+    if (event.deltaY > 0)
+      setTransform((transform) => ({
+        ...transform,
+        zoom: transform.zoom * 0.9,
+      }));
+    else if (event.deltaY < 0)
+      setTransform((transform) => ({
+        ...transform,
+        zoom: transform.zoom * 1.1,
+      }));
+  }
+
   return (
     <div
       style={containerStyle}
@@ -318,11 +326,12 @@ const GraphCanvas: React.FC = () => {
         if (event.dataTransfer.getData("type") !== "node") return;
         const movedId: string = event.dataTransfer.getData("id");
         const offset = JSON.parse(event.dataTransfer.getData("offset"));
-        moveNode(
-          movedId,
-          event.clientX - offset.x - transform.offX,
-          event.clientY - offset.y - transform.offY
+        const coords = getCoordsFromDisplay(
+          event.clientX - offset.x,
+          event.clientY - offset.y,
+          transform
         );
+        moveNode(movedId, coords.x, coords.y);
       }}
       onDragOver={(event) => {
         event.preventDefault();
@@ -330,6 +339,7 @@ const GraphCanvas: React.FC = () => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
+      onWheel={handleMouseWheel}
     >
       {links.map((link) => {
         const node1 = getNode(link.node1);
