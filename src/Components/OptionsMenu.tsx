@@ -321,7 +321,7 @@ const OptionsGuide: React.FC<{ openCollapse: () => void }> = ({
           setOpen(true);
         }}
       >
-        Tutorial
+        Guided tour
       </Button>
       <Tour
         open={open}
