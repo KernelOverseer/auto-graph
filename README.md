@@ -66,8 +66,6 @@ Throughout the development of this project, I have gained valuable experience in
 
 - **TypeScript Types and Interfaces**: Extensively using TypeScript, I defined types and interfaces to ensure type safety and improve code maintainability.
 
-- (Add any other notable learnings or challenges you encountered during the project.)
-
 ## Future Enhancements
 
 Although the current version of the project showcases the skills mentioned above, there are several areas where it can be further improved:
