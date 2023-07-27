@@ -10,6 +10,7 @@ import OptionsMenu from "./OptionsMenu";
 import { defaultLinks, defaultNodes } from "../logic/preset";
 import { transforms } from "../interfaces/transforms";
 import { getCoordsFromDisplay } from "../logic/transforms";
+import AlgoMenu from "./AlgoMenu";
 
 const containerStyle = {
   width: "100vw",
@@ -44,8 +45,7 @@ const GraphCanvas: React.FC = () => {
     return nodes.find((value) => value.id === id);
   }
 
-  function getChildren(id: string): string[] | undefined {
-    const parent = getNode(id);
+  function nodeGetChildren(parent: nodeData | undefined): string[] | undefined {
     if (parent === undefined) return undefined;
     else {
       let children: string[] = [];
@@ -229,8 +229,12 @@ const GraphCanvas: React.FC = () => {
   }
 
   //exposing functions to window
-  (window as any).getChildren = (id: string): string[] => {
-    let children = getChildren(id);
+  (window as any).getChildren = async (node: nodeData): Promise<string[]> => {
+    // if (node !== undefined && node.visited !== true) {
+    //   visitNode(node.id);
+    //   await handleStepping();
+    // }
+    let children = nodeGetChildren(node);
     if (children === undefined) return [];
     return children;
   };
@@ -240,7 +244,6 @@ const GraphCanvas: React.FC = () => {
     let node = getNode(id);
     if (node !== undefined && node.visited !== true) {
       visitNode(id);
-      // here introduce either a delay, or blockage to progress steps
       await handleStepping();
     }
     return node;
@@ -320,51 +323,53 @@ const GraphCanvas: React.FC = () => {
   }
 
   return (
-    <div
-      style={containerStyle}
-      onDrop={(event) => {
-        //check if it's dropping random things and not nodes.
-        if (event.dataTransfer.getData("type") !== "node") return;
-        const movedId: string = event.dataTransfer.getData("id");
-        const offset = JSON.parse(event.dataTransfer.getData("offset"));
-        const coords = getCoordsFromDisplay(
-          event.clientX - offset.x,
-          event.clientY - offset.y,
-          transform
-        );
-        moveNode(movedId, coords.x, coords.y);
-      }}
-      onDragOver={(event) => {
-        event.preventDefault();
-      }}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
-      onWheel={handleMouseWheel}
-    >
-      {links.map((link) => {
-        const node1 = getNode(link.node1);
-        const node2 = getNode(link.node2);
-        if (node1 && node2) {
-          return (
-            <GraphLink
-              key={`${node1.id}+${node2.id}`}
-              node1={node1}
-              node2={node2}
-              flag={link.flag}
-              actions={actions}
-            />
+    <>
+      <div
+        style={containerStyle}
+        onDrop={(event) => {
+          //check if it's dropping random things and not nodes.
+          if (event.dataTransfer.getData("type") !== "node") return;
+          const movedId: string = event.dataTransfer.getData("id");
+          const offset = JSON.parse(event.dataTransfer.getData("offset"));
+          const coords = getCoordsFromDisplay(
+            event.clientX - offset.x,
+            event.clientY - offset.y,
+            transform
           );
-        }
-        return <></>;
-      })}
-      {nodes.map((node) => (
-        <GraphNode key={node.id} {...dataToProps(node)} />
-      ))}
-
+          moveNode(movedId, coords.x, coords.y);
+        }}
+        onDragOver={(event) => {
+          event.preventDefault();
+        }}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onWheel={handleMouseWheel}
+      >
+        {links.map((link) => {
+          const node1 = getNode(link.node1);
+          const node2 = getNode(link.node2);
+          if (node1 && node2) {
+            return (
+              <GraphLink
+                key={`${node1.id}+${node2.id}`}
+                node1={node1}
+                node2={node2}
+                flag={link.flag}
+                actions={actions}
+              />
+            );
+          }
+          return <></>;
+        })}
+        {nodes.map((node) => (
+          <GraphNode key={node.id} {...dataToProps(node)} />
+        ))}
+      </div>
       <OptionsMenu actions={actions} />
+      <AlgoMenu actions={actions} />
       <ControlBar actions={actions} />
-    </div>
+    </>
   );
 };
 

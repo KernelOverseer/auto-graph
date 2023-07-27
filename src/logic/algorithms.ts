@@ -63,3 +63,31 @@ export async function breadthFirstSearch(): Promise<void> {
     }
   }
 }
+
+export const presetCodes = [
+  {
+    label: "Breadth First Search",
+    code: "const graph = window;\
+    const start = graph.getStart();\
+    const end = graph.getEnd();\
+    \
+    if (requireStartEnd(start === undefined, end === undefined)) {\
+      return;\
+    }\
+    \
+    let queue = [start];\
+    let current;\
+    \
+    while (queue.length > 0) {\
+      current = queue[0];\
+      queue = queue.slice(1);\
+      if (current === undefined) break;\
+      let node = await graph.getNode(current);\
+      if (current === end) break;\
+      if (node?.visited !== true) {\
+        let children = graph.getChildren(current);\
+        queue.push(...children);\
+      }\
+    }",
+  },
+];

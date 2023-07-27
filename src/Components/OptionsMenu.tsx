@@ -192,11 +192,6 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
       label: "Options",
       children: <NodeOptions actions={actions} />,
     },
-    {
-      key: "3",
-      label: "Algorithms",
-      children: <AlgoMenu actions={actions} />,
-    },
   ];
 
   return (
@@ -232,6 +227,11 @@ const OptionsGuide: React.FC<{ openCollapse: () => void }> = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const steps = [
+    {
+      title: "Welcome to Auto-Graph",
+      description:
+        "Auto-graph allows users to interactively visualize and manipulate graphs using drag and drop interactions, providing an intuitive and engaging experience for graph exploration and analysis.",
+    },
     {
       title: "Change Mouse Mode",
       description:

@@ -5,3 +5,8 @@ export interface algoInfo {
   value: string;
   function: () => Promise<void>;
 }
+
+export interface editorProps {
+  code: string;
+  setCode: (code: string) => void;
+}
