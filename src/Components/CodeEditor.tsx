@@ -7,17 +7,39 @@ import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css"; //Example style, you can use another
 import { editorProps } from "../interfaces/algorithms";
 
+const containerStyle = {
+  textAlign: "left",
+  background: "white",
+  padding: 10,
+} as React.CSSProperties;
+
+const textStyle = {
+  fontFamily: '"Fira code", "Fira Mono", monospace',
+  fontSize: 16,
+} as React.CSSProperties;
+
 const codeAreaStyle = {
   fontFamily: '"Fira code", "Fira Mono", monospace',
   fontSize: 16,
-  background: "#f5f5f5",
+  background: "white",
+  border: "1px solid #f3f3f3",
 } as React.CSSProperties;
 
 const CodeEditor: React.FC<editorProps> = ({ code, setCode }) => {
   return (
-    <div style={{ textAlign: "left" }}>
-      <Typography.Text>{"async (start, end) => {"}</Typography.Text>
-      <div style={{ overflow: "scroll", maxHeight: 400 }}>
+    <div style={containerStyle}>
+      <p style={textStyle}>
+        <span style={{ color: "#0077aa" }}>{"async "}</span>
+        <span style={{ color: "#aaaaaa" }}>{"("}</span>start
+        <span style={{ color: "#aaaaaa" }}>,</span> end
+        <span style={{ color: "#aaaaaa" }}>{")"}</span>
+        <span style={{ color: "#9a6e3a" }}>{" => "}</span>
+        <span style={{ color: "#aaaaaa" }}>{"{"}</span>
+      </p>
+      <div
+        className="editor-container"
+        style={{ overflow: "scroll", maxHeight: 400 }}
+      >
         <Editor
           style={codeAreaStyle}
           value={code}
@@ -26,7 +48,9 @@ const CodeEditor: React.FC<editorProps> = ({ code, setCode }) => {
           padding={15}
         />
       </div>
-      <Typography.Text>{"}"}</Typography.Text>
+      <p style={textStyle}>
+        <span style={{ color: "#aaaaaa" }}>{"}"}</span>
+      </p>
     </div>
   );
 };

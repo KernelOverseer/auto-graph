@@ -21,3 +21,7 @@ code {
 .GraphNode:hover {
   cursor: pointer;
 }
+
+.editor-container::-webkit-scrollbar {
+  display: none;
+}

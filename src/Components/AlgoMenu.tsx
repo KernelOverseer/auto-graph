@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { actionProps } from "../interfaces/nodeData";
-import { Button, Col, Collapse, Row, Select, message } from "antd";
+import {
+  Button,
+  Col,
+  Collapse,
+  Row,
+  Select,
+  message,
+  notification,
+} from "antd";
 import { breadthFirstSearch, depthFirstSearch } from "../logic/algorithms";
 import {
   RocketOutlined,
@@ -27,14 +35,13 @@ const algorithms: algoInfo[] = [
   {
     label: "Breadth First Search",
     value: "bfs",
-    function: breadthFirstSearch,
+    code: breadthFirstSearch,
   },
   {
     label: "Depth First Search",
     value: "dfs",
-    function: depthFirstSearch,
+    code: depthFirstSearch,
   },
-  //   { label: "Dijkstra", value: "dijkstra", function: async () => {} },
 ];
 
 const floatingMenuStyle = {
@@ -78,7 +85,7 @@ const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
     await new Promise((resolve) => setTimeout(resolve, 0)); //give the component time to refresh state
     actions.setRunning(label);
     try {
-      await new Promise((resolve) => {
+      const error = await new Promise((resolve) => {
         (window as any).codeResolve = resolve;
         eval(
           `(async () => {
@@ -88,25 +95,23 @@ const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
             ${code}
             }catch(err)
             {
-              console.log("ERROR", err);
+              window.codeResolve(err);
             }
             window.codeResolve();
             window.codeResolve=undefined})()`
         );
       });
+      if (error !== undefined) {
+        throw error;
+      }
     } catch (error) {
-      message.error("An error occured with your code");
-      console.log(error);
+      notification.error({
+        message: `${error}`,
+        description: "Check the development console for more details",
+        placement: "bottomLeft",
+      });
+      console.error(error);
     }
-    actions.setRunning(undefined);
-  }
-
-  async function runAlgorithm(algo: algoFunction, name: string) {
-    actions.select(actions.selected!);
-    actions.resetGraph();
-    await new Promise((resolve) => setTimeout(resolve, 0)); //give the component time to refresh state
-    actions.setRunning(name);
-    await algo();
     actions.setRunning(undefined);
   }
 
@@ -118,6 +123,7 @@ const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
           style={{ width: "100%" }}
           onSelect={(_, value) => {
             setSelected(value);
+            setCode(value.code);
           }}
           value={selected}
           defaultValue={algorithms[0]}
@@ -135,7 +141,6 @@ const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
             icon={<RocketOutlined />}
             onClick={() => {
               runCode(code, "test");
-              //runAlgorithm(selected.function, selected.value);
             }}
             loading={actions.running !== undefined}
           >

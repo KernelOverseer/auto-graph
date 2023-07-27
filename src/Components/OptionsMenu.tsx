@@ -214,7 +214,7 @@ const OptionsMenu: React.FC<actionProps> = ({ actions }) => {
         href="https://github.com/kerneloverseer/auto-graph"
         target="_blank"
       >
-        Repo
+        Repository
       </Button>
     </div>
   );
