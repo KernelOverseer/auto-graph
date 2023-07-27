@@ -30,7 +30,7 @@ const GraphCanvas: React.FC = () => {
   const [stepDelay, setStepDelay] = useState<number>(100);
   const [running, setRunning] = useState<string | undefined>();
   const [transform, setTransform] = useState<transforms>({
-    offX: 0,
+    offX: 300,
     offY: 0,
     zoom: 1.0,
     dragOn: false,
