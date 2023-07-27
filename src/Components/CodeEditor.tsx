@@ -10,7 +10,7 @@ import { editorProps } from "../interfaces/algorithms";
 const containerStyle = {
   textAlign: "left",
   background: "white",
-  padding: 10,
+  padding: 5,
 } as React.CSSProperties;
 
 const textStyle = {

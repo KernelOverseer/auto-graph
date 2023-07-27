@@ -4,8 +4,10 @@ import {
   Button,
   Col,
   Collapse,
+  Divider,
   Row,
   Select,
+  Typography,
   message,
   notification,
 } from "antd";
@@ -69,7 +71,7 @@ const AlgoMenu: React.FC<actionProps> = ({ actions }) => {
 
 const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
   const [selected, setSelected] = useState<algoInfo>(algorithms[0]);
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState<string>(algorithms[0].code);
 
   async function runCode(code: string, label: string) {
     const graph: nodeOperations = window as any;
@@ -117,6 +119,9 @@ const AlgoRunner: React.FC<actionProps> = ({ actions }) => {
 
   return (
     <Row gutter={[16, 16]}>
+      <Col span={24} style={{ textAlign: "left" }}>
+        <Typography.Text>Select preset :</Typography.Text>
+      </Col>
       <Col span={24}>
         <Select
           id="guide-algo-select"
