@@ -9,7 +9,7 @@ This is a graph visualization website built using React, TypeScript, and Ant Des
 The website allows users to interactively visualize and manipulate graphs using drag and drop interactions, providing an intuitive and engaging experience for graph exploration and analysis.
 
 <p align="center">
-<img src="https://i.ibb.co/gygd9mT/showcase.gif">
+<img src="https://kerneloverseer.github.io/auto-graph/showcase.gif">
 </p>
 
 ## Key Features
