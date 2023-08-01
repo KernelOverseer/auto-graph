@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://i.ibb.co/F8J7zGz/Auto-Graph.png">
+<img src="https://kerneloverseer.github.io/auto-graph/favicon.svg">
 </p>
 
 ## Overview
