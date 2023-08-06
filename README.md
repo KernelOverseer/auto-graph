@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://i.ibb.co/F8J7zGz/Auto-Graph.png">
+<img src="https://kerneloverseer.github.io/auto-graph/favicon.svg">
 </p>
 
 ## Overview
@@ -16,9 +16,11 @@ The website allows users to interactively visualize and manipulate graphs using 
 
 - Interactive Graph Visualization: Users can create, modify, and explore graphs through intuitive drag and drop interactions, making it easy to understand complex relationships between nodes.
 
-- State Management: The application efficiently manages state updates to ensure seamless graph manipulation without losing data integrity.
+- Code Sandbox: Allowing the users to explore more by visualizing what their code does, and explore more.
 
 - User-Friendly Interface: The project features a clean and intuitive user interface, designed using Ant Design components, enhancing the overall user experience.
+
+- State Management: The application efficiently manages state updates to ensure seamless graph manipulation without losing data integrity.
 
 - TypeScript Types and Interfaces: TypeScript has been used extensively to provide type safety, reducing potential bugs and improving code readability.
 
@@ -71,8 +73,6 @@ Throughout the development of this project, I have gained valuable experience in
 Although the current version of the project showcases the skills mentioned above, there are several areas where it can be further improved:
 
 - **Responsive Design**: Enhancing the responsiveness of the website to ensure a seamless experience across various devices and screen sizes.
-
-- **Code Sandbox**: Allowing the users to explore more by visualizing what their code does, and explore more.
 
 ## Contribution
 
